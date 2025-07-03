@@ -1,0 +1,143 @@
+/* 전체 선택자 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.form-group {
+    margin: 0px 0px 15px 0px;
+}
+
+/* 태그 선택자 */
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+body > h1 {
+    text-align: center;
+}
+
+/* ID 선택자 */
+#registration-form {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* 속성 선택자 */
+[type="text"] {
+    width: 100%;
+    padding: 3px;
+    border: 3px solid #cccccc;
+}
+
+/* 속성 선택자 */
+[type="email"] {
+    width: 100%;
+    padding: 3px;
+    border: 3px solid #cccccc;
+}
+
+/* 속성 선택자 */
+[type="password"] {
+    width: 100%;
+    padding: 3px;
+    border: 3px solid #cccccc;
+}
+
+/* 속성 선택자 */
+[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+}
+
+/* 속성 선택자 */
+[type="reset"] {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+}
+
+/* 자손 선택자 */
+form p {
+    padding: 5px;
+}
+
+/* 자식 선택자 */
+form > p {
+    border-bottom: 1px solid #eee;
+}
+
+/* 태그 선택자 */
+label {
+    display: inline-block;
+    width: 100px;
+}
+
+/* 태그 선택자 */
+select {
+    width: 120px;
+    border: 2px dotted pink;
+}
+
+/* ---- 도전 과제 시작 ---- */
+
+/* 속성 선택자 + 가상 클래스 */
+[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* 속성 선택자 + 가상 클래스 */
+[type="reset"]:hover {
+    background-color: #0056b3;
+}
+
+/* 태그 선택자 + 가상 클래스 */
+select:hover {
+    border-color: #007bff;
+}
+
+/* 자식 선택자 + 가상 클래스 */
+form > p:first-child {
+    margin-top: 20px;
+}
+
+/* 태그 선택자 + 가상 클래스 */
+select option:first-child {
+    font-weight: bold;
+}
+
+/* 태그 선택자 + 가상 요소 */
+h1::after {
+    content: "✨";
+    margin-left: 10px;
+}
+
+/* 클래스 선택자 + 가상 요소 */
+.form-group::after {
+    content: "";
+    display: block;
+    height: 1px;
+    background: #dddddd;
+    margin-top: 10px;
+}
+
+/* ID 선택자 + 가상 요소 */
+#labelName::after {
+    content: "*";
+    color: red;
+}
+
+/* ID 선택자 + 가상 요소 */
+#labelEmail::after {
+    content: "*";
+    color: red;
+}
+
+/* ID 선택자 + 가상 요소 */
+#labelPassword::after {
+    content: "*";
+    color: red;
+}
