@@ -1,0 +1,102 @@
+body {
+    max-width: 80vw;
+    text-align: center;
+    font-size: 1rem;
+}
+
+header {
+    padding: 2rem;
+    border-bottom: 0.2rem;
+}
+
+a {
+    text-decoration: none;
+}
+
+nav ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    justify-items: center;
+}
+
+nav ul li {
+    display: inline-block;
+}
+
+#posts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+}
+
+.post {
+    padding: 1.5rem;
+    border: 0.2rem solid pink;
+}
+
+aside {
+    font-size: 1em;
+    width: 25vw;
+    padding: 1.5rem;
+    margin-right: 2vw;
+}
+
+footer {
+    padding: 1.5rem;
+    border-top: 0.2rem solid pink;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+section {
+    margin: 2vw;
+}
+
+/* 태블릿 */
+@media (max-width: 1023px) {
+    body {
+        max-width: 90vw;
+    }
+
+    #posts {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    nav ul {
+        justify-content: space-around;
+    }
+
+    aside {
+        width: 30vw;
+        margin-right: 1vw;
+    }
+}
+
+/* 모바일 */
+@media (max-width: 767px) {
+    body {
+        max-width: 100%;
+        padding: 1rem;
+    }
+
+    nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    #posts {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    aside {
+        width: 100%;
+        margin: 1rem;
+    }
+}
