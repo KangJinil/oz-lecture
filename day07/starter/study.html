@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <title>Bootstrap Grid 실시간 col 적용 상태 표시</title>
+    <style>
+        .debug-viewport {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            color: #0d6efd;
+        }
+        .class-info {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #333;
+            min-height: 2em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .debug-actual {
+            color: #be0c41;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-viewport text-center" id="viewportInfo">Viewport: -</div>
+    <h1 class="text-center">Hello, world!</h1>
+
+    <div class="container text-center">
+        <div class="row">
+            <div class="col bg-info class-info"></div>
+            <div class="col bg-success class-info"></div>
+            <div class="col bg-info class-info"></div>
+        </div>
+    </div>
+    <hr />
+    <div class="container text-center">
+        <div class="row">
+            <div class="col bg-info class-info"></div>
+            <div class="col bg-success class-info"></div>
+        </div>
+        <div class="row">
+            <div class="col bg-info class-info"></div>
+            <div class="col bg-success class-info"></div>
+            <div class="col bg-info class-info"></div>
+        </div>
+    </div>
+    <hr />
+    <div class="container text-center">
+        <div class="row">
+            <div class="col bg-info class-info"></div>
+            <div class="col-6 bg-success class-info"></div>
+            <div class="col bg-info class-info"></div>
+        </div>
+        <div class="row">
+            <div class="col bg-info class-info"></div>
+            <div class="col-5 bg-success class-info"></div>
+            <div class="col bg-info class-info"></div>
+        </div>
+    </div>
+    <hr />
+    <div class="container text-center">
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-2 bg-info class-info"></div>
+            <div class="col-md-auto bg-success class-info"></div>
+            <div class="col col-lg-2 bg-info class-info"></div>
+        </div>
+        <div class="row">
+            <div class="col bg-info class-info"></div>
+            <div class="col-md-auto bg-success class-info"></div>
+            <div class="col col-lg-2 bg-info class-info"></div>
+        </div>
+    </div>
+
+    <script>
+        // Bootstrap grid breakpoints
+        const BOOTSTRAP_BREAKPOINTS = [
+            { name: 'xl', min: 1200 },
+            { name: 'lg', min: 992 },
+            { name: 'md', min: 768 },
+            { name: 'sm', min: 576 },
+            { name: 'xs', min: 0 }
+        ];
+
+        // 현재 브라우저의 Bootstrap breakpoint 이름 구하기
+        function getCurrentBootstrapBreakpoint() {
+            const width = window.innerWidth;
+            for (let bp of BOOTSTRAP_BREAKPOINTS) {
+                if (width >= bp.min) return bp.name;
+            }
+            return 'xs';
+        }
+
+        function updateViewportInfo() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const bp = getCurrentBootstrapBreakpoint().toUpperCase();
+            document.getElementById('viewportInfo').textContent =
+                `Viewport: ${w} x ${h} [Bootstrap: ${bp}]`;
+        }
+
+        // 실제 적용된 col-xx-n을 계산해서 표시
+        function updateClassInfo() {
+            // 각 .row 마다
+            document.querySelectorAll('.row').forEach(row => {
+                const rowWidth = row.getBoundingClientRect().width;
+                // 각 .class-info 마다
+                row.querySelectorAll('.class-info').forEach(colDiv => {
+                    // 실제 px width
+                    const colWidth = colDiv.getBoundingClientRect().width;
+                    // col-1~12 중 비율이 가장 비슷한 값 찾기
+                    let bestCol = null;
+                    let bestDiff = Infinity;
+                    for (let i = 1; i <= 12; i++) {
+                        const targetWidth = rowWidth * i / 12;
+                        const diff = Math.abs(colWidth - targetWidth);
+                        if (diff < bestDiff) {
+                            bestDiff = diff;
+                            bestCol = i;
+                        }
+                    }
+                    // div의 class 중 col-xx- 형태를 추출
+                    const classList = Array.from(colDiv.classList)
+                        .filter(c => c.startsWith('col'));
+                    // 실시간 breakpoint 구하기
+                    const bp = getCurrentBootstrapBreakpoint();
+                    // 현재 적용 클래스 구하기 (가장 마지막에 선언된 col-xx 우선)
+                    let actualColClass = '';
+                    for (let c of classList) {
+                        // col-lg-2처럼 breakpoint가 현재보다 작거나 같은 경우 적용
+                        if (c.startsWith('col-')) {
+                            const parts = c.split('-');
+                            if (parts.length === 3) {
+                                const cBp = parts[1];
+                                if (
+                                    BOOTSTRAP_BREAKPOINTS.findIndex(e => e.name === cBp) <=
+                                    BOOTSTRAP_BREAKPOINTS.findIndex(e => e.name === bp)
+                                ) {
+                                    actualColClass = c;
+                                }
+                            } else if (parts.length === 2 && parts[1] !== 'auto') {
+                                actualColClass = c;
+                            }
+                        } else if (c === 'col') {
+                            actualColClass = c;
+                        }
+                    }
+                    // 표시 텍스트
+                    colDiv.innerHTML =
+                        `<span>class: <b>${classList.join(' ') || '-'}</b></span><br/>
+                        <span>실제적용: <span class="debug-actual">${actualColClass ? actualColClass : `col-${bestCol}`}</span></span>`;
+                });
+            });
+        }
+
+        window.addEventListener('resize', function () {
+            updateViewportInfo();
+            updateClassInfo();
+        });
+
+        // 최초
+        updateViewportInfo();
+        updateClassInfo();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
