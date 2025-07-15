@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Fetch 실습</title>
+    </head>
+    <body>
+        <h1>Fetch API 실습</h1>
+        <div id="result"></div>
+        <script>
+            const getPost = async () => {
+                try {
+                    let response = await fetch(
+                        "https://jsonplaceholder.typicode.com/posts/2"
+                    );
+                    let data = await response.json();
+                    document.getElementById("result").textContent = data.title;
+                } catch (error) {
+                    document.getElementById("result").textContent =
+                        "에러: " + error.message;
+                }
+            };
+            const result = getPost();
+        </script>
+    </body>
+</html>
